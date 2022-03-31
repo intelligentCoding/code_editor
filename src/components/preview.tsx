@@ -1,5 +1,6 @@
+import { whileStatement } from "jscodeshift";
 import { useEffect, useRef } from "react";
-
+import './preview.css';
 interface PreviewProps {
     code: string
 }
@@ -30,7 +31,11 @@ const Preview: React.FC<PreviewProps> = ({code}) => {
         iframe.current.srcdoc = html;
         iframe.current.contentWindow.postMessage(code, "*")
     }, [code])
-    return <iframe title="preview" ref={iframe} srcDoc={html} sandbox="allow-scripts"/>
+    return (
+        <div className="preview-wrapper">
+            <iframe title="preview" ref={iframe} srcDoc={html} sandbox="allow-scripts"/>
+        </div>
+    )
 };
 
 export default Preview;
