@@ -1,11 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
-import { resourceLimits } from 'worker_threads';
-import axios from 'axios';
-import localforage from 'localforage';
 
-const fileCache = localforage.createInstance({
-  name: 'filecache'
-});
+
 
 export const unpkgPathPlugin = () => {
   return {
