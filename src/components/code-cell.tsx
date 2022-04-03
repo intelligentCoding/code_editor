@@ -4,13 +4,15 @@ import CodeEditor from './code-editor';
 import Preview from './preview';
 import bundle from '../bundler';
 const CodeCell = () => {
-    const [ code, setCode ] = useState('')
+    const [code, setCode ] = useState('')
+    const [error, setError] = useState('');
     const [input, setInput] = useState('');
 
     useEffect(() => {
       const timer = setTimeout(async () => {
         const output = await bundle(input);
-        setCode(output);
+        setCode(output.code);
+        setError(output.err);
       }, 1000)
       return () => {
         clearTimeout(timer);
@@ -23,7 +25,7 @@ const CodeCell = () => {
           <Resizable direction="hirizontal">
             <CodeEditor initialValue="const a = 1;" onChange={(value) => setInput(value)}/>
           </Resizable>
-          <Preview code={code}/>
+          <Preview code={code} err={error}/>
         </div>
       </Resizable>
     )
