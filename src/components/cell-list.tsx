@@ -14,7 +14,7 @@ const CellList: React.FC = () => {
     <AddCell  nextCellId={cell.id}/>
     <CellListItem key={cell.id} cell={cell} />
     </Fragment>
-})
+});
 
   return <div>
     {renderedCells}
