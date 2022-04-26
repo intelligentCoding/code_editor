@@ -5,6 +5,7 @@ import CodeEditor from './code-editor';
 import Preview from './preview';
 import { Cell } from '../state';
 import {useActions} from '../hooks/use-actions';
+import { useCumulativeCode } from '../hooks/use-cumulative-code';
 import { useTpedSelector } from '../hooks/use-typed-selector';
 interface CodeCellProps {
   cell: Cell
@@ -13,35 +14,20 @@ interface CodeCellProps {
 const CodeCell: React.FC<CodeCellProps> = ({cell}) => {
     const { updateCell, createBundle } = useActions();
     const bundle = useTpedSelector((state) => state.bundles![cell.id]);
-    const cumulativeCode = useTpedSelector((state) => {
-      const { data, order } = state.cells!;
-      const orderedCells = order.map(id => data[id]);
-      const cumulativeCode = [];
-      for (let c of orderedCells) {
-        if(c.type === 'code') {
-          cumulativeCode.push(c.content);
-        }
-        if (c.id === cell.id) {
-          break;
-        }
-      }
-      console.log(cumulativeCode);
-      return cumulativeCode;
-
-    })
+    const cumulativeCode = useCumulativeCode(cell.id);
     useEffect(() => {
       if(!bundle) {
-        createBundle(cell.id,  cumulativeCode.join('\n'));
+        createBundle(cell.id,  cumulativeCode);
         return;
       }
       const timer = setTimeout(async () => {
-        createBundle(cell.id,  cumulativeCode.join('\n'))
+        createBundle(cell.id,  cumulativeCode)
       }, 1000)
       return () => {
         clearTimeout(timer);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ cell.id, createBundle, cumulativeCode.join('\n')])
+    }, [ cell.id, createBundle, cumulativeCode])
 
     return (
       <Resizable direction="vertical">   
